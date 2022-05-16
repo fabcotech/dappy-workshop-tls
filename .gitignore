@@ -1,7 +1,7 @@
 .rnode
-.pem
-.crt
-.key
+*.pem
+*.crt
+*.key
 dappy.config.json
 logs
 test
