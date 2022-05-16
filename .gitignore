@@ -2,6 +2,8 @@
 *.pem
 *.crt
 *.key
+*.csr
+*.srl
 dappy.config.json
 dappyrc
 logs
