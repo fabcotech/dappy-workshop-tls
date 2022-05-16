@@ -95,7 +95,7 @@ curl --cacert dappynode.crt --doh-url https://localhost:3002/dns-query http://ww
 
 ```sh 
 # Configure chrome DOH to https://localhost:3002/dns-query
-# Visit http://company.dappy
+# Visit http://www.company.dappy
 # Should display Success !!!
 
 # Congrats ! Chrome resolved company.dappy using dappy DOH server and Dappy name system
