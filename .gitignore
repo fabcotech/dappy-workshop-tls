@@ -3,6 +3,7 @@
 *.crt
 *.key
 dappy.config.json
+dappyrc
 logs
 test
 nginx
