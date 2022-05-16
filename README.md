@@ -164,7 +164,7 @@ dappy-lookup www.company.dappy CERT --endpoint=http://127.0.0.1:3001 --cacert=da
 ```sh
 # Run nginx in a container
 docker run --rm --name company \
-    -v $(pwd)/nginx/nginx-tls.conf:/etc/nginx/nginx.conf \
+    -v $(pwd)/2-tls-server/nginx-tls-server.conf:/etc/nginx/nginx.conf \
     -v $(pwd)/company-key.pem:/etc/nginx/company-key.pem \
     -v $(pwd)/company.pem:/etc/nginx/company.pem \
     -p 80:80 \
