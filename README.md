@@ -107,20 +107,24 @@ curl --cacert dappynode.crt --doh-url https://localhost:3002/dns-query http://ww
 
 ```sh
 # Create www.company.dappy key
-openssl ecparam -name secp256r1 -genkey -noout -out company-key.pem
+openssl ecparam -name secp256r1 -genkey -noout -out company.key
 
 # Create www.company.dappy certificate
 openssl req \
   -new \
+  -sha256 \
+  -nodes \
   -x509 \
-  -key company-key.pem \
-  -out company.pem -days 365 \
+  -key company.key \
+  -out company.crt \
+  -days 365 \
   -subj /CN=company.dappy \
   -extensions san \
   -config <( \
     echo '[req]'; \
     echo 'distinguished_name=req'; \
     echo '[san]'; \
+    echo 'basicConstraints = critical, CA:TRUE'; \
     echo 'subjectAltName=DNS.1:www.company.dappy';)
 
 # Publish www.company.dappy certificate on dappy
@@ -134,7 +138,7 @@ cat << EOF > dappy.config.json
         {
           "name": "www",
           "type": "CERT",
-          "data": "$(openssl base64 -A -in company.pem)"
+          "data": "$(openssl base64 -A -in company.crt)"
         },
         {
           "name": "www",
@@ -156,7 +160,7 @@ EOF
 dappy-cli pushzones
 
 # Confirm that www.company.dappy CERT is published on dappy
-dappy-lookup www.company.dappy CERT --endpoint=http://127.0.0.1:3001 --cacert=dappynode.crt --hostname=localhost
+dappy-lookup www.company.dappy CERT --endpoint=https://127.0.0.1:3002 --cacert=dappynode.crt --hostname=localhost
 ```
 
 ## Enable TLS and run www.company.dappy using nginx
@@ -165,8 +169,8 @@ dappy-lookup www.company.dappy CERT --endpoint=http://127.0.0.1:3001 --cacert=da
 # Run nginx in a container
 docker run --rm --name company \
     -v $(pwd)/2-tls-server/nginx-tls-server.conf:/etc/nginx/nginx.conf \
-    -v $(pwd)/company-key.pem:/etc/nginx/company-key.pem \
-    -v $(pwd)/company.pem:/etc/nginx/company.pem \
+    -v $(pwd)/company.key:/etc/nginx/company-key.pem \
+    -v $(pwd)/company.crt:/etc/nginx/company.pem \
     -p 80:80 \
     -p 443:443 \
     nginx \
@@ -176,17 +180,17 @@ docker run --rm --name company \
 ## Visit https://www.company.dappy with curl
 ```sh
 # Concatenate dappy-node and www.company.dappy certificates for curl
-cat dappynode.crt > certs.pem && echo "\n" >> certs.pem && cat company.pem >> certs.pem
+cat dappynode.crt > certs.pem && echo "\n" >> certs.pem && cat company.crt >> certs.pem
 
 # Visit https://www.company.dappy using curl and resolving name with dappy-node DOH server
-curl --cacert certs.pem --doh-url https://localhost:3002/dns-query https://www.company.dappy
+curl https://www.company.dappy --cacert certs.pem --doh-url https://localhost:3002/dns-query
 ```
 
 ## Visit https://www.company.dappy with chrome 
 
 ```sh
 # OSX only, trust dappy-node certificate 
-sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain company.pem
+sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain company.crt
 # Using chrome, visit https://www.company.dappy
 # Should display Success !!!
 
@@ -197,4 +201,61 @@ sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keyc
 
 ## Create client certificate and sign it with custom CA
 
-## Verify client certicate using dappy on nginx
+```sh
+# Create clienr key
+openssl ecparam -name secp256r1 -genkey -noout -out client.key
+
+# Generate client CSR
+openssl req \
+  -new \
+  -sha256 \
+  -nodes \
+  -key client.key \
+  -out client.csr \
+  -subj /CN=client.dappy
+
+# Sign client CSR using www.company.dappy certificate
+openssl x509 \
+  -req \
+  -sha256 \
+  -CA company.crt \
+  -CAkey company.key \
+  -in client.csr \
+  -out client.crt \
+  -days 365 \
+  -CAcreateserial
+```
+
+## Enable client certicate validation using dappy on nginx
+
+In a dedicated terminal
+```sh
+cd verifysig
+
+# Create verifysig key and certificate
+openssl ecparam -name secp256r1 -genkey -noout -out verifysig.key 
+openssl req -new -x509 -key verifysig.key -out verifysig.crt -subj /CN=verifysig
+
+# Start verifisig middleware
+npm i
+npm start
+```
+
+```sh
+# Run nginx in a container
+docker run --rm --name company \
+    -v $(pwd)/3-tls-client/nginx-tls-client.conf:/etc/nginx/nginx.conf \
+    -v $(pwd)/company.key:/etc/nginx/company-key.pem \
+    -v $(pwd)/company.crt:/etc/nginx/company.pem \
+    -v $(pwd)/3-tls-client/dappy.js:/etc/nginx/njs/dappy.js \
+    -p 80:80 \
+    -p 443:443 \
+    nginx \
+    nginx-debug -g 'daemon off;'
+
+curl https://www.company.dappy \
+  --cacert certs.pem \
+  --doh-url https://localhost:3002/dns-query \
+  --key client.key \
+  --cert client.crt
+```
