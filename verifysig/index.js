@@ -16,8 +16,8 @@ async function getData(req) {
 https
   .createServer(
     {
-      cert: fs.readFileSync("verifysig.pem"),
-      key: fs.readFileSync("verifysig-key.pem"),
+      cert: fs.readFileSync("verifysig.crt"),
+      key: fs.readFileSync("verifysig.key"),
     },
     async (req, res) => {
       const { cert, caName } = await getData(req);
