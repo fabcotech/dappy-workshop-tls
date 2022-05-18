@@ -68,7 +68,7 @@ curl http://127.0.0.1
 
 ## Publish www.company.dappy IPs to dappy name system
 
-Publish company.dappy A and AAAA records on dappy@
+Publish company.dappy A and AAAA records on dappy name system
 Publish also google.com A record (needed for Google Chrome)
 
 ```sh
@@ -118,8 +118,9 @@ dappy-lookup www.company.dappy A --endpoint=http://127.0.0.1:3001
 
 ## Visit http://www.company.dappy with curl
 
+Visit http://www.company.dappy using curl and dappy-node DOH server
+
 ```sh
-# Visit http://www.company.dappy using curl and dappy-node DOH server
 curl --cacert dappynode.crt --doh-url https://localhost:3002/dns-query http://www.company.dappy
 ```
 
@@ -140,7 +141,7 @@ curl --cacert dappynode.crt --doh-url https://localhost:3002/dns-query http://ww
 Create www.company.dappy key
 
 ```sh
-openssl ecparam -name secp256r1 -genkey -noout -out company.key
+openssl ecparam -name prime256v1 -genkey -noout -out company.key
 ```
 
 Create www.company.dappy certificate
@@ -254,7 +255,7 @@ Chrome resolved wwww.company.dappy using dappy DOH server and Dappy name system 
 Create client key
 
 ```sh
-openssl ecparam -name secp256r1 -genkey -noout -out client.key
+openssl ecparam -name prime256v1 -genkey -noout -out client.key
 ```
 
 Generate client CSR
@@ -291,7 +292,7 @@ cd verifysig
 ```
 Create verifysig key and certificate
 ```
-openssl ecparam -name secp256r1 -genkey -noout -out verifysig.key 
+openssl ecparam -name prime256v1 -genkey -noout -out verifysig.key 
 openssl req -new -x509 -key verifysig.key -out verifysig.crt -subj /CN=verifysig
 ```
 
