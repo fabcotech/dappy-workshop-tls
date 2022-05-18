@@ -1,5 +1,7 @@
 # Prerequistes
 
+Install docker : https://docs.docker.com/engine/install/
+
 Install dappy-cli
 ```sh
 npm i -g @fabcotech/dappy-cli
@@ -40,6 +42,7 @@ DAPPY_NODE_HTTPS_PORT=3002 dappy-node
 ```
 
 Trust dappy-node certificate to be able to use dappy-node DOH server with chrome
+
 OSX only, trust dappy-node certificate 
 ```sh
 sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain dappynode.crt
