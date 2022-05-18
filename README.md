@@ -312,6 +312,7 @@ docker run --rm --name company \
     -v $(pwd)/3-tls-client/dappy.js:/etc/nginx/njs/dappy.js \
     -p 80:80 \
     -p 443:443 \
+    --add-host=host.docker.internal:host-gateway \
     nginx \
     nginx-debug -g 'daemon off;'
 ```
