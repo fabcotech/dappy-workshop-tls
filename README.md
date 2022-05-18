@@ -2,6 +2,8 @@
 
 Install docker : https://docs.docker.com/engine/install/
 
+Install nodejs > 16: https://nodejs.org/en/download/
+
 Install dappy-cli
 ```sh
 npm i -g @fabcotech/dappy-cli
