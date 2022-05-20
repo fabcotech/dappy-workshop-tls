@@ -38,24 +38,26 @@ Deploy Dappy name system on local rnode
 dappy-deploy-name-system
 ```
 
-Run dappy-node in HTTP, HTTPS and UDP (port DNS 53)
-
-For linux users:
-- [How to run node program on reserved port (port < 1024) ?](https://tekloon.dev/run-node-project-reserved-port)
-- [How to free up port 53 ?](https://www.linuxuprising.com/2020/07/ubuntu-how-to-free-up-port-53-used-by.html)
+Run dappy-node with DOH endpoint
 
 ```sh
-DAPPY_NODE_HTTPS_PORT=3002 DAPPY_NODE_DNS_PORT=53 dappy-node
+DAPPY_NODE_HTTPS_PORT=3002 dappy-node
 ```
 
-Trust dappy-node certificate to be able to use dappy-node DOH server with chrome
+Trust `dappynode.crt` certificate to be able to use dappy-node DOH server with chrome
 
-OSX only, trust dappy-node certificate 
+- Only for OSX, trust dappy-node certificate 
+
 ```sh
 sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain dappynode.crt
 ```
 
-Ubuntu/Debian only, trust dappy-node certificate
+- Only for Chromium on Linux:
+
+https://superuser.com/questions/1296596/how-can-i-get-chrome-accepting-self-signed-certificates
+
+- Only for Ubuntu/Debian (curl):
+
 ```sh
 sudo apt-get install -y ca-certificates
 sudo cp dappynode.crt /usr/local/share/ca-certificates
@@ -142,7 +144,6 @@ curl --cacert dappynode.crt --doh-url https://localhost:3002/dns-query http://ww
 ## Visit http://www.company.dappy with chrome
 
 ```sh 
-# Change your default DNS server to 127.0.0.1
 # Visit http://www.company.dappy
 # Should display Success !!!
 
@@ -251,21 +252,22 @@ curl https://www.company.dappy --cacert certs.pem --doh-url https://localhost:30
 
 ## Visit https://www.company.dappy with chrome 
 
-OSX only, trust dappy-node certificate 
+Trust certificate `company.crt` with one of these solutions
+
+- Only for OSX, trust dappy-node certificate 
 
 ```sh
 sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain company.crt
 ```
 
-Ubuntu/Debian only, trust dappy-node certificate
+- Only for Chromium on Linux:
 
-```sh
-sudo apt-get install -y ca-certificates
-sudo cp dappynode.crt /usr/local/share/ca-certificates
-sudo update-ca-certificates
+https://superuser.com/questions/1296596/how-can-i-get-chrome-accepting-self-signed-certificates
+
 ```
 
-Change your default DNS server to 127.0.0.1
+Configure Chrome/Chromium DOH server to https://localhost:3002/dns-query
+
 Using chrome, visit https://www.company.dappy
 
 Should display `Success !!!`
