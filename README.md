@@ -54,6 +54,14 @@ OSX only, trust dappy-node certificate
 ```sh
 sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain dappynode.crt
 ```
+
+Ubuntu/Debian only, trust dappy-node certificate
+```sh
+sudo apt-get install -y ca-certificates
+sudo cp dappynode.crt /usr/local/share/ca-certificates
+sudo update-ca-certificates
+```
+
 Others OS: https://support.kerioconnect.gfi.com/hc/en-us/articles/360015200119-Adding-Trusted-Root-Certificates-to-the-Server
 
 # DEMO 1: Publish company website on dappy name system
@@ -247,6 +255,14 @@ OSX only, trust dappy-node certificate
 
 ```sh
 sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain company.crt
+```
+
+Ubuntu/Debian only, trust dappy-node certificate
+
+```sh
+sudo apt-get install -y ca-certificates
+sudo cp dappynode.crt /usr/local/share/ca-certificates
+sudo update-ca-certificates
 ```
 
 Change your default DNS server to 127.0.0.1
