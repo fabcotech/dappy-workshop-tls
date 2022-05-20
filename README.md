@@ -37,10 +37,15 @@ Deploy Dappy name system on local rnode
 ```sh
 dappy-deploy-name-system
 ```
-Run dappy-node in HTTP
+
+Run dappy-node in HTTP, HTTPS and UDP (port DNS 53)
+
+For linux users:
+- [How to run node program on reserved port (port < 1024) ?](https://tekloon.dev/run-node-project-reserved-port)
+- [How to free up port 53 ?](https://www.linuxuprising.com/2020/07/ubuntu-how-to-free-up-port-53-used-by.html)
 
 ```sh
-DAPPY_NODE_HTTPS_PORT=3002 dappy-node
+DAPPY_NODE_HTTPS_PORT=3002 DAPPY_NODE_DNS_PORT=53 dappy-node
 ```
 
 Trust dappy-node certificate to be able to use dappy-node DOH server with chrome
@@ -129,7 +134,7 @@ curl --cacert dappynode.crt --doh-url https://localhost:3002/dns-query http://ww
 ## Visit http://www.company.dappy with chrome
 
 ```sh 
-# Configure chrome DOH to https://localhost:3002/dns-query
+# Change your default DNS server to 127.0.0.1
 # Visit http://www.company.dappy
 # Should display Success !!!
 
@@ -244,6 +249,7 @@ OSX only, trust dappy-node certificate
 sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain company.crt
 ```
 
+Change your default DNS server to 127.0.0.1
 Using chrome, visit https://www.company.dappy
 
 Should display `Success !!!`
