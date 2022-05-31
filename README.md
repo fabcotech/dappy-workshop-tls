@@ -1,4 +1,15 @@
-# Prerequistes
+Hello and welcome to dappy TLS workshop ⚗🔐🌠 !!
+
+This workshop is divided in three parts and addressed to developers, cybersecurity engineers and system administrators who want to understand or test in depth the new security principles proposed under the [dappy](https://dappy.tech) project.
+
+Dappy secures web application in a new way, the first of them is to not use DNS or certificate authorities that open hundreds of security gaps, and instead rely on the blockchain and co-resolution. Dappy browser will also provide out of the box TLS authentication.
+
+Structure:
+- Demo 1️⃣ : Setup a local blockchain (RChain), a DNS over HTTPS, purchase domain name, expose web application over HTTP
+- Demo 2️⃣ : Generate certificates, add the certificate to the DNS record on the blockchain, expose web application over HTTPS
+- Demo 3️⃣ : Add TLS client side authentication
+
+### Prerequistes
 
 Install docker : https://docs.docker.com/engine/install/
 
@@ -20,7 +31,7 @@ Install dappy-lookup
 ```sh
 npm i -g @fabcotech/dappy-lookup
 ```
-## Run dappy-node locally
+### Run dappy-node locally
 
 Install globally @fabcotech/dappy-node package
 
@@ -75,9 +86,9 @@ sudo update-ca-certificates
 
 Others OS: https://support.kerioconnect.gfi.com/hc/en-us/articles/360015200119-Adding-Trusted-Root-Certificates-to-the-Server
 
-# DEMO 1: Publish company website on dappy name system
+## DEMO 1️⃣ : Publish company website on dappy name system
 
-## Run a nginx not secured
+### Run a nginx not secured
 
 Run nginx in a container
 ```sh
@@ -92,7 +103,7 @@ Test connectivity
 curl http://127.0.0.1
 ```
 
-## Publish www.company.dappy IPs to dappy name system
+### Publish www.company.dappy IPs to dappy name system
 
 Publish company.dappy A and AAAA records on dappy name system
 Publish also google.com A record (needed for Google Chrome)
@@ -142,7 +153,7 @@ Confirm that www.company.dappy A record is published
 dappy-lookup www.company.dappy A --endpoint=http://127.0.0.1:3001
 ```
 
-## Visit http://www.company.dappy with curl
+### Visit http://www.company.dappy with curl
 
 Visit http://www.company.dappy using curl and dappy-node DOH server
 
@@ -150,7 +161,7 @@ Visit http://www.company.dappy using curl and dappy-node DOH server
 curl --cacert dappynode.crt --doh-url https://localhost:3002/dns-query http://www.company.dappy
 ```
 
-## Visit http://www.company.dappy with chrome
+### Visit http://www.company.dappy with chrome
 
 Configure Chrome/Chromium with DNS Over HTTPS server, chrome setting address is probably chrome://settings/security "Secure DNS" , choose "custom" and input https://localhost:3002/dns-query
 
@@ -165,9 +176,9 @@ Should display `Success over HTTP (port 80) !!!`.
 - 🔐 DNS over HTTPS for service discovery (and co-resolution by the dappy network in production environment)
 - 🤕 Right now it is simply accessed over HTTP (without encryption), continue to demo 2 and 3 to expose over HTTPS !
 
-# DEMO 2: Secure communication with TLS and use Dappy to distribute server certificate 
+## DEMO 2️⃣ : Secure communications with TLS and use dappy to distribute server certificate 
 
-## Publish www.company.dappy certificate
+### Publish www.company.dappy certificate
 
 Create a company.key private key for www.company.dappy domain. We will use this key to generate certificates.
 
@@ -236,7 +247,7 @@ Confirm that www.company.dappy CERT is published on dappy
 dappy-lookup www.company.dappy CERT --endpoint=https://127.0.0.1:3002 --cacert=dappynode.crt --hostname=localhost
 ```
 
-## Enable TLS and run www.company.dappy using nginx
+### Enable TLS and run www.company.dappy using nginx
 
 Run nginx in a container
 
@@ -251,7 +262,7 @@ docker run --rm --name company \
     nginx-debug -g 'daemon off;'
 ```
 
-## Visit https://www.company.dappy with curl
+### Visit https://www.company.dappy with curl
 
 Concatenate dappy-node and www.company.dappy certificates for curl.
 
@@ -268,7 +279,7 @@ Visit https://www.company.dappy using curl and resolving name with dappy-node DO
 curl --cacert certs.pem --doh-url https://localhost:3002/dns-query https://www.company.dappy
 ```
 
-## Visit https://www.company.dappy with chrome 
+### Visit https://www.company.dappy with chrome 
 
 Trust certificate `company.crt` with one of these solutions
 
@@ -293,9 +304,9 @@ Chrome resolved wwww.company.dappy using dappy-node DOH server and Dappy name sy
 - 🔐 DNS over HTTPS for service discovery (and co-resolution by the dappy network in production environment)
 - 🔐 Accessed over HTTPS !
 
-# DEMO 3: Authenticate clients using custom CA
+## DEMO 3️⃣ : Authenticate clients using custom CA and TLS
 
-## Create client certificate and sign it with custom CA
+### Create client certificate and sign it with custom CA
 
 Create client key
 
@@ -329,7 +340,7 @@ openssl x509 \
   -CAcreateserial
 ```
 
-## Enable client certicate validation using dappy on nginx
+### Enable client certicate validation using dappy on nginx
 
 In a dedicated terminal
 ```sh
