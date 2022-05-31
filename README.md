@@ -2,6 +2,14 @@
 
 Install docker : https://docs.docker.com/engine/install/
 
+Install docker compose plugin: https://docs.docker.com/compose/install/
+
+Following command should display docker compose version: 
+```sh
+docker compose version
+# Docker Compose version v2.0.0-beta.6
+```
+
 Install nodejs > 16: https://nodejs.org/en/download/
 
 Install dappy-cli
