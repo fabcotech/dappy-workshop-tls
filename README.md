@@ -1,8 +1,10 @@
+# Dappy TLS workshop
+
 Hello and welcome to dappy TLS workshop ⚗🔐🌠 !!
 
 This workshop is divided in three parts and addressed to developers, cybersecurity engineers and system administrators who want to understand or test in depth the new security principles proposed under the [dappy](https://dappy.tech) project.
 
-Dappy secures web application in a new way, the first of them is to not use DNS or certificate authorities that open hundreds of security gaps, and instead rely on the blockchain and co-resolution. Dappy browser will also provide out of the box TLS authentication.
+**Dappy secures web application in a new way**, the first of them is to **not use DNS or certificate authorities** that open hundreds of security gaps, and instead rely on the **blockchain and co-resolution**. Dappy browser will also provide out of the box TLS authentication.
 
 Structure:
 - Demo 1️⃣ : Setup a local blockchain (RChain), a DNS over HTTPS, purchase domain name, expose web application over HTTP
@@ -86,7 +88,7 @@ sudo update-ca-certificates
 
 Others OS: https://support.kerioconnect.gfi.com/hc/en-us/articles/360015200119-Adding-Trusted-Root-Certificates-to-the-Server
 
-## DEMO 1️⃣ : Publish company website on dappy name system
+## Demo 1️⃣ : Publish company website on dappy name system
 
 ### Run a nginx not secured
 
@@ -176,7 +178,7 @@ Should display `Success over HTTP (port 80) !!!`.
 - 🔐 DNS over HTTPS for service discovery (and co-resolution by the dappy network in production environment)
 - 🤕 Right now it is simply accessed over HTTP (without encryption), continue to demo 2 and 3 to expose over HTTPS !
 
-## DEMO 2️⃣ : Secure communications with TLS and use dappy to distribute server certificate 
+## Demo 2️⃣ : Secure communications with TLS and use dappy to distribute server certificate 
 
 ### Publish www.company.dappy certificate
 
@@ -304,7 +306,7 @@ Chrome resolved wwww.company.dappy using dappy-node DOH server and Dappy name sy
 - 🔐 DNS over HTTPS for service discovery (and co-resolution by the dappy network in production environment)
 - 🔐 Accessed over HTTPS !
 
-## DEMO 3️⃣ : Authenticate clients using custom CA and TLS
+## Demo 3️⃣ : Authenticate clients using custom CA and TLS
 
 ### Create client certificate and sign it with custom CA
 
