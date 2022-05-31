@@ -18,7 +18,7 @@ npm i -g @fabcotech/dappy-cli
 ```
 Install dappy-lookup
 ```sh
-npm i -g @fatcotech/dappy-lookup
+npm i -g @fabcotech/dappy-lookup
 ```
 ## Run dappy-node locally
 
@@ -37,7 +37,8 @@ easyrnode init
 Run local rnode, propose blocks, and redis using docker and docker-compose 
 
 ```sh
-easyrnode run 
+easyrnode run
+# wait for the "Listening for traffic" log
 ```
 
 Deploy Dappy name system on local rnode
@@ -151,18 +152,24 @@ curl --cacert dappynode.crt --doh-url https://localhost:3002/dns-query http://ww
 
 ## Visit http://www.company.dappy with chrome
 
+Configure Chrome/Chromium with DNS Over HTTPS server, chrome setting address is probably chrome://settings/security "Secure DNS" , choose "custom" and input https://localhost:3002/dns-query
+
 ```sh 
 # Visit http://www.company.dappy
-# Should display Success !!!
-
-# Congrats ! Chrome resolved company.dappy using dappy DOH server and Dappy name system
 ```
+
+Should display `Success over HTTP (port 80) !!!`.
+
+**Congratulations !!** You completed demo 1, your web application now has the following properties :
+- 🔐 Blockchain + dappy name system instead of the DNS
+- 🔐 DNS over HTTPS for service discovery (and co-resolution by the dappy network in production environment)
+- 🤕 Right now it is simply accessed over HTTP (without encryption), continue to demo 2 and 3 to expose over HTTPS !
 
 # DEMO 2: Secure communication with TLS and use Dappy to distribute server certificate 
 
 ## Publish www.company.dappy certificate
 
-Create www.company.dappy key
+Create a company.key private key for www.company.dappy domain. We will use this key to generate certificates.
 
 ```sh
 openssl ecparam -name prime256v1 -genkey -noout -out company.key
@@ -246,16 +253,19 @@ docker run --rm --name company \
 
 ## Visit https://www.company.dappy with curl
 
-Concatenate dappy-node and www.company.dappy certificates for curl
+Concatenate dappy-node and www.company.dappy certificates for curl.
 
 ```sh
-cat dappynode.crt > certs.pem && echo "\n" >> certs.pem && cat company.crt >> certs.pem
+cat << EOF > certs.pem
+`cat dappynode.crt`
+`cat company.crt`
+EOF
 ```
 
 Visit https://www.company.dappy using curl and resolving name with dappy-node DOH server
 
 ```sh
-curl https://www.company.dappy --cacert certs.pem --doh-url https://localhost:3002/dns-query
+curl --cacert certs.pem --doh-url https://localhost:3002/dns-query https://www.company.dappy
 ```
 
 ## Visit https://www.company.dappy with chrome 
@@ -272,15 +282,16 @@ sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keyc
 
 https://superuser.com/questions/1296596/how-can-i-get-chrome-accepting-self-signed-certificates
 
-```
-
-Configure Chrome/Chromium DOH server to https://localhost:3002/dns-query
-
 Using chrome, visit https://www.company.dappy
 
-Should display `Success !!!`
+Should display `Success over HTTPS (port 443) !!!`
 
-Chrome resolved wwww.company.dappy using dappy DOH server and Dappy name system using a TLS connection
+Chrome resolved wwww.company.dappy using dappy-node DOH server and Dappy name system using a TLS connection
+
+**Congratulations !!** You completed demo 2, your web application is secure in many ways 😛😛 :
+- 🔐 Blockchain + dappy name system instead of the DNS and Certificate Authorities (TLS)
+- 🔐 DNS over HTTPS for service discovery (and co-resolution by the dappy network in production environment)
+- 🔐 Accessed over HTTPS !
 
 # DEMO 3: Authenticate clients using custom CA
 
@@ -292,7 +303,7 @@ Create client key
 openssl ecparam -name prime256v1 -genkey -noout -out client.key
 ```
 
-Generate client CSR
+Generate client CSR (Certificate Signing Request)
 
 ```sh
 openssl req \
@@ -360,3 +371,11 @@ curl https://www.company.dappy \
   --key client.key \
   --cert client.crt
 ```
+
+Should display `Success over HTTPS (port 443) and client authenticated !!!`
+
+**Congratulations !!** You completed demo 3 🎇🎈🎇🎈, your web application is now one of the most secure in the world, the security properties :
+- 🔐 Blockchain + dappy name system instead of the DNS and Certificate Authorities (TLS)
+- 🔐 DNS over HTTPS for service discovery (and co-resolution by the dappy network in production environment)
+- 🔐 Accessed over HTTPS !
+- 🔐 The web server authenticates the clients with TLS. Just like the client authenticates the server !
